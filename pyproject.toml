@@ -1,0 +1,31 @@
+[project]
+name = "battlecard-ai"
+version = "1.1.0"
+description = "Automated B2B competitive-intelligence & GTM agent: monitors competitor pages and writes a sales battlecard."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Vaibhav Gupta", email = "Edumaths360@gmail.com" }]
+requires-python = ">=3.11"
+dependencies = [
+  "requests>=2.32",
+  "beautifulsoup4>=4.12",
+  "PyYAML>=6.0",
+  "pydantic>=2.7",
+  "google-genai>=1.0",
+  "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.urls]
+Repository = "https://github.com/Creator-hub24/battlecard-ai"
+
+[project.scripts]
+battlecard-ai = "agent:main"
+
+[tool.setuptools]
+py-modules = ["agent"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
