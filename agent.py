@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""AI GTM Competitive-Intelligence Agent.
+"""battlecard-ai: an AI competitive-intelligence and GTM agent.
 
 Monitor -> Analyze -> Synthesize:
 
@@ -38,12 +38,13 @@ import yaml
 from bs4 import BeautifulSoup, Comment, NavigableString
 from pydantic import BaseModel, Field, ValidationError
 
-__version__ = "1.0.0"
+APP_NAME = "battlecard-ai"
+__version__ = "1.1.0"
+REPO_URL = "https://github.com/Creator-hub24/battlecard-ai"
 ROOT = Path(__file__).resolve().parent
 log = logging.getLogger("gtm_agent")
 
-USER_AGENT = (f"ai-gtm-competitive-agent/{__version__} "
-              "(+https://github.com/Creator-hub24/ai-gtm-competitive-agent)")
+USER_AGENT = f"{APP_NAME}/{__version__} (+{REPO_URL})"
 FIRECRAWL_URL = "https://api.firecrawl.dev/v2/scrape"
 HTTP_TIMEOUT = 20
 
@@ -100,7 +101,7 @@ class PricingShift(BaseModel):
 
 class FeatureShift(BaseModel):
     feature: str
-    change: Literal["added", "removed", "improved", "limited"]
+    change: Literal["added", "removed", "deprecated", "improved", "limited"]
     evidence: str = ""
 
 
@@ -775,21 +776,65 @@ def analyze_offline(comp: Competitor, snaps: list[Snapshot], cfg: Config, as_of:
                                       evidence=ev, source=s.origin))
         else:
             changes.extend(extract_changes(s.text, s.origin, since, as_of))
+    changes = merge_price_changes(changes)
     feature_status = detect_features(corpus, cfg.features)
-    fshifts = []
-    for c in changes:
-        if c.category in ("feature_added", "feature_removed", "improvement"):
-            keys = ([k for k, spec in cfg.features.items() if mentions(c.title, spec.get("keywords", []))]
-                    or [k for k, spec in cfg.features.items() if mentions(c.detail, spec.get("keywords", []))])
-            change = {"feature_added": "added", "feature_removed": "removed", "improvement": "improved"}[c.category]
-            if c.category == "improvement" and re.search(r"batch size", c.detail, re.I):
-                change = "limited"
-            fshifts.append(FeatureShift(feature=cfg.features[keys[0]]["label"] if keys else c.title,
-                                        change=change, evidence=c.evidence))
+    fshifts = feature_shifts_from_changes(changes, cfg)
     a = CompetitorAnalysis(competitor_id=comp.id, name=comp.name, mode="offline", plans=plans,
                            what_changed=changes, pricing_shifts=shifts, feature_shifts=fshifts,
                            feature_status=feature_status, weak_points=find_weak_points(snaps))
     return finish_analysis(a, cfg)
+
+
+def _numbers(text: str) -> set[int]:
+    return {int(n.replace(",", "")) for n in re.findall(r"\d[\d,]*", text)}
+
+
+def merge_price_changes(changes: list[Change]) -> list[Change]:
+    """One row per price move: a pricing-page diff that a dated changelog entry confirms (both prices
+    appear in it) takes the changelog date and cites both sources; the changelog row is dropped."""
+    diffs = [c for c in changes if c.date is None and c.category == "pricing"]
+    logs = [c for c in changes if c.date and c.category == "pricing"]
+    used: set[int] = set()
+    for d in diffs:
+        m = re.search(r"(₹[\d,]+) → (₹[\d,]+)", d.title)
+        if not m:
+            continue
+        old, new = (int(x.strip("₹").replace(",", "")) for x in m.groups())
+        for i, log in enumerate(logs):
+            if {old, new} <= _numbers(f"{log.title} {log.detail} {log.evidence}"):
+                d.date, used = log.date, used | {i}
+                d.evidence = f"{log.evidence} Confirmed by the pricing page diff vs the previous snapshot."
+                d.detail = f"Changelog entry '{log.title}' + pricing page diff"
+                d.source = f"{log.source}; {d.source}"
+                break
+    kept = [c for c in changes if not any(c is logs[i] for i in used)]
+    # undated page diffs first, then newest first
+    return [c for c in kept if c.date is None] + sorted((c for c in kept if c.date), key=lambda c: c.date,
+                                                        reverse=True)
+
+
+STATUS_WORDS = re.compile(r"\s*\b(?:deprecated|removed|discontinued|sunset|launched|introducing|"
+                          r"(?:is|are) now (?:generally )?available)\b\s*", re.I)
+
+
+def feature_shifts_from_changes(changes: list[Change], cfg: Config) -> list[FeatureShift]:
+    out = []
+    for c in changes:
+        keys = ([k for k, spec in cfg.features.items() if mentions(c.title, spec.get("keywords", []))]
+                or [k for k, spec in cfg.features.items() if mentions(c.detail, spec.get("keywords", []))])
+        if c.category == "other" and keys:
+            c.category = "feature_added"  # a changelog entry naming a capability is a launch
+        if c.category not in ("feature_added", "feature_removed", "improvement"):
+            continue
+        if c.category == "improvement" and any(pat.search(PRICE_RE.sub("PRICE", f"{c.title} {c.detail} {c.evidence}"))
+                                               for _, pat in WEAK_RULES):
+            continue  # "improvements" like bigger batches are weak points, not a change to the capability
+        text = f"{c.title} {c.detail}"
+        change = ("deprecated" if re.search(r"deprecat", text, re.I) else
+                  {"feature_added": "added", "feature_removed": "removed", "improvement": "improved"}[c.category])
+        name = cfg.features[keys[0]]["label"] if keys else (STATUS_WORDS.sub(" ", c.title).strip(" :-") or c.title)
+        out.append(FeatureShift(feature=name, change=change, evidence=c.evidence))
+    return out
 
 
 def finish_analysis(a: CompetitorAnalysis, cfg: Config) -> CompetitorAnalysis:
@@ -953,8 +998,9 @@ def _price_cell(p: Plan) -> str:
 
 
 def biggest_move(a: CompetitorAnalysis) -> str:
+    ranked = sorted(a.what_changed, key=lambda c: "→" not in c.title)  # price moves before new add-ons
     for cat in ("pricing", "feature_added", "feature_removed", "reliability", "improvement"):
-        for c in a.what_changed:
+        for c in ranked:
             if c.category == cat:
                 return c.title + (f" ({c.date})" if c.date else "")
     return "No dated changes in the window"
@@ -977,7 +1023,7 @@ def render_battlecard(analyses: list[CompetitorAnalysis], snaps: dict[str, list[
                  f"prices and changelogs, created for a portfolio demo. The {us} profile is illustrative.")
         L.append("")
     L.append(f"**Generated:** {generated_at} · **Analysis mode:** {mode_txt} · "
-             f"**Change window:** {since:%d %b %Y} to {as_of:%d %b %Y} · **Agent:** v{__version__}")
+             f"**Change window:** {since:%d %b %Y} to {as_of:%d %b %Y} · **Agent:** {APP_NAME} v{__version__}")
     L.append("")
     L.append("## 🧭 Executive TL;DR")
     L.append("")
@@ -1000,7 +1046,7 @@ def render_battlecard(analyses: list[CompetitorAnalysis], snaps: dict[str, list[
             L.append(f"| {a.name} | `{s.origin}` | {s.kind} | {s.retrieved_at} | `{s.sha256[:12]}` | {label} |")
     L.append("")
     L.append("---")
-    L.append(f"*Generated by [ai-gtm-competitive-agent](https://github.com/Creator-hub24/ai-gtm-competitive-agent) "
+    L.append(f"*Generated by [{APP_NAME}]({REPO_URL}) "
              f"({', '.join(modes)} mode). Verify claims against the linked sources before "
              "sharing with customers.*")
     return "\n".join(L) + "\n"
@@ -1102,7 +1148,7 @@ def render_competitor(i: int, a: CompetitorAnalysis, pb: Playbook, cfg: Config) 
 # CLI
 # ════════════════════════════════════════════════════════════════════════════
 def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(
+    p = argparse.ArgumentParser(prog=APP_NAME,
         description="Monitor competitor pages, analyze changes (Gemini or offline) and write a Sales Battlecard.")
     p.add_argument("--config", default=str(ROOT / "competitors.yaml"), help="config YAML (default: %(default)s)")
     p.add_argument("--competitor", action="append", metavar="ID",
