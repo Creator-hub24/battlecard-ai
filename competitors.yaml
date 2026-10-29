@@ -1,0 +1,91 @@
+# Competitive-intelligence agent configuration.
+# Competitors below are FICTIONAL (MOCK data). Their URLs use the reserved .example domain.
+
+us:
+  profile: sample_competitors/edumaths360/profile.yaml
+
+settings:
+  # Pinned "today" for the mock dataset so the sample battlecard is reproducible.
+  # Remove it (or pass --as-of) for real monitoring.
+  as_of: "2026-10-29"
+  lookback_days: 120          # "What changed" window
+  timezone: Asia/Kolkata
+  gemini_model: gemini-flash-latest   # override with GEMINI_MODEL
+  max_chars_per_source: 12000         # text sent to the LLM per source
+  cache_file: .cache/agent_state.json
+
+competitors:
+  - id: sumzilla
+    name: Sumzilla
+    mock: true
+    sources:
+      - {kind: pricing,   url: "https://sumzilla.example/pricing",   local: sample_competitors/sumzilla/pricing.html,
+         baseline: sample_competitors/sumzilla/pricing_2026-06.html}
+      - {kind: changelog, url: "https://sumzilla.example/changelog", local: sample_competitors/sumzilla/changelog.md}
+
+  - id: ganitron
+    name: Ganitron Live
+    mock: true
+    sources:
+      - {kind: pricing,   url: "https://ganitron.example/pricing", local: sample_competitors/ganitron/pricing.html,
+         baseline: sample_competitors/ganitron/pricing_2026-06.html}
+      - {kind: changelog, url: "https://ganitron.example/updates", local: sample_competitors/ganitron/changelog.html}
+
+  - id: numeronest
+    name: NumeroNest AI
+    mock: true
+    sources:
+      - {kind: pricing,   url: "https://numeronest.example/pricing",   local: sample_competitors/numeronest/pricing.html,
+         baseline: sample_competitors/numeronest/pricing_2026-06.html}
+      - {kind: changelog, url: "https://numeronest.example/changelog", local: sample_competitors/numeronest/changelog.md}
+
+# Capability taxonomy used for the feature matrix (both offline and Gemini modes).
+# keywords        -> evidence that the competitor offers it
+# partial_keywords-> evidence that it is limited (only some classes, beta, roadmap...)
+# landmine        -> question a rep asks when the competitor is weak here
+features:
+  adaptive_practice:
+    label: Adaptive practice (difficulty adjusts per student)
+    keywords: [adaptive, adjusts difficulty, personalised practice, personalized practice]
+    landmine: "When a student gets three questions right in a row, what exactly changes in the next question? Can you see that in the demo?"
+  board_pattern_mocks:
+    label: Full-length board-pattern mock tests
+    keywords: [board mock, full-length mock, full-length board, mock test, sample paper]
+    landmine: "How many full-length, timed mocks in the latest board pattern are included, and who marks them against the marking scheme?"
+  weakness_analytics:
+    label: Chapter-wise weakness report
+    keywords: [weakness report, chapter-wise performance, chapter-wise report, performance report, error analysis]
+    landmine: "After a test, can you see which chapters and question types lost marks, and what to practise next?"
+  step_solutions:
+    label: Step-by-step worked solutions
+    keywords: [step-by-step, step by step, worked solution, video solution]
+    landmine: "Who writes and checks the solutions? What happens when an answer is wrong?"
+  doubt_solving:
+    label: Doubt solving
+    keywords: [doubt]
+    landmine: "If a student is stuck at 9 pm the night before a test, how and how fast do they get a checked answer?"
+  live_classes:
+    label: Live classes
+    keywords: [live class, live classes, live batch, live session]
+    landmine: "If your child misses a live class or falls behind the batch, how do they catch up?"
+  parent_reports:
+    label: Parent progress reports
+    keywords: [parent report, parent email report, parent-teacher, parent app, progress report]
+    landmine: "What does a parent actually receive each week: attendance and streaks, or chapter-level progress?"
+  vernacular:
+    label: Hindi / bilingual content
+    keywords: [hindi, hinglish, bilingual, vernacular]
+    landmine: "Is the Hindi or bilingual content available for every class you need, or only some batches?"
+  offline_access:
+    label: Offline / low-data access
+    keywords: [offline, low-data, download videos, downloadable]
+    landmine: "Which features still work on a weak connection, and are offline downloads included in the plan you are buying?"
+  full_coverage_6_10:
+    label: Covers the full Class 6-10 syllabus
+    keywords: [class 6 to 10, class 6-10, classes 6-10, class 5 to 10, classes 6 to 10]
+    partial_keywords: [class 6-8 only, classes 8 to 10 only, class 8 to 10, classes 8 to 10]
+    landmine: "Will the same subscription cover your child all the way to the Class 10 boards, or will you need to switch platforms?"
+  gamification:
+    label: Gamified streaks and leaderboards
+    keywords: [leaderboard, xp, streak, badges]
+    landmine: "Beyond points and streaks, how do you show that marks are actually improving?"

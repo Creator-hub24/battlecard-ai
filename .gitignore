@@ -1,0 +1,15 @@
+# Secrets
+.env
+
+# Agent state and run output (the committed sample is output/sample_battlecard.md)
+.cache/
+output/*
+!output/sample_battlecard.md
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/

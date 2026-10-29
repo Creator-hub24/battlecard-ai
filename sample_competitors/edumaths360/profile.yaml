@@ -1,0 +1,48 @@
+# Illustrative "us" profile for the battlecard. Edit this file to match the real product.
+name: Edumaths360
+tagline: Board-exam maths practice for Class 6-10, built by a maths teacher
+segment: Class 6-10 maths (CBSE / ICSE / state boards), India
+currency: INR
+plans:
+  - {name: Free trial, price: 0, period: 7 days}
+  - {name: Pro Monthly, price: 499, period: month}
+  - {name: Pro Quarterly, price: 1299, period: quarter}
+  - {name: Pro Annual, price: 3999, period: year}
+# yes | partial | no  (keys must match the feature taxonomy in competitors.yaml)
+features:
+  adaptive_practice: "yes"
+  board_pattern_mocks: "yes"
+  weakness_analytics: "yes"
+  step_solutions: "yes"
+  doubt_solving: "yes"
+  live_classes: "partial"      # weekly live doubt-clearing session, not full live courses
+  parent_reports: "yes"
+  vernacular: "partial"        # Hindi explanations for Class 6-8
+  offline_access: "partial"    # downloadable PDF solutions, practice needs internet
+  full_coverage_6_10: "yes"
+  gamification: "partial"      # streaks, no leaderboards
+differentiators:
+  - key: board_pattern_mocks
+    theme: "Board-pattern mocks with marking-scheme feedback"
+    proof: "Every full-length mock follows the latest board pattern (incl. competency-based questions) and is marked step by step, the way a board examiner would."
+  - key: adaptive_practice
+    theme: "Practice that adapts to each child"
+    proof: "Difficulty steps up or down per chapter, so a strong student is not bored and a weak one is not lost."
+  - key: weakness_analytics
+    theme: "Chapter-wise weakness report after every test"
+    proof: "Parents and students see exactly which chapters and question types lose marks, and what to practise next."
+  - key: full_coverage_6_10
+    theme: "One platform from Class 6 to Class 10"
+    proof: "A single subscription covers the full Class 6-10 syllabus, so families do not switch apps before boards."
+  - key: step_solutions
+    theme: "Teacher-written step-by-step solutions"
+    proof: "Solutions are written and checked by a maths teacher, not generated on the fly."
+# How we answer when a competitor is stronger on a capability
+counter_positioning:
+  live_classes: "Live lectures are passive and fixed to a batch timetable. Our weekly live doubt session plus adaptive practice keeps the child solving problems, which is what moves board marks."
+  gamification: "Points and leaderboards drive app opens, not marks. We use streaks to build the habit and measure progress with real board-pattern tests."
+  doubt_solving: "Every doubt gets a teacher-checked, step-by-step answer, so the child learns the method instead of copying a chatbot reply."
+  vernacular: "Hindi explanations cover Class 6-8 today; for Class 9-10 we focus on the English board-exam paper the student will actually write."
+  offline_access: "Solutions download as PDFs for low-data revision; practice stays online so every attempt feeds the weakness report."
+  parent_reports: "Parents get a weekly chapter-wise report, not just attendance or time-spent numbers."
+  adaptive_practice: "Our adaptivity is tied to board-pattern difficulty levels, not just 'more of the same question type'."
