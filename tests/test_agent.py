@@ -275,3 +275,57 @@ def test_committed_sample_battlecard_matches_agent_output(tmp_path):
     strip = lambda s: re.sub(r"\d{4}-\d{2}-\d{2} \d{2}:\d{2} \w+", "<ts>", s)  # noqa: E731
     assert strip(out.read_text(encoding="utf-8")) == strip(
         (ROOT / "output" / "sample_battlecard.md").read_text(encoding="utf-8"))
+
+
+# ── Offline wording fixes (v1.1) ────────────────────────────────────────────
+def analyze(cfg, cid):
+    comp = next(c for c in cfg.competitors if c.id == cid)
+    snaps = agent.monitor(comp, cfg, agent.Cache(Path("/x"), enabled=False), live=False, now="t")
+    return agent.analyze_offline(comp, snaps, cfg, AS_OF, 120)
+
+
+def test_deprecated_feature_uses_feature_name(cfg):
+    shifts = [(f.change, f.feature) for f in analyze(cfg, "numeronest").feature_shifts]
+    assert ("deprecated", "Printable worksheets") in shifts
+    assert not any("deprecated" in name.lower() for _, name in shifts)
+
+
+def test_changelog_entry_naming_a_capability_is_a_launch(cfg):
+    a = analyze(cfg, "numeronest")
+    photo = next(c for c in a.what_changed if c.title == "Photo doubts")
+    assert photo.category == "feature_added"
+    assert ("added", "Doubt solving") in [(f.change, f.feature) for f in a.feature_shifts]
+
+
+def test_price_change_seen_in_page_diff_and_changelog_is_one_row(cfg):
+    a = analyze(cfg, "sumzilla")
+    pricing = [c for c in a.what_changed if c.category == "pricing"]
+    plus = [c for c in pricing if c.title.startswith("Sumzilla Plus:")]
+    assert len(plus) == 1 and plus[0].title.startswith("Sumzilla Plus: ₹349 → ₹249")
+    assert plus[0].date == "2026-10-05"
+    assert "changelog.md" in plus[0].source and "pricing.html" in plus[0].source
+    assert "Confirmed by the pricing page diff" in plus[0].evidence
+    assert not any(c.title == "Plus is now ₹249/month" for c in a.what_changed)   # changelog row merged
+    # a new add-on with no matching changelog price entry stays a page-diff row
+    assert any(c.date is None and c.title.startswith("New plan: AI Doubt Bot") for c in pricing)
+    for cid in ("ganitron", "numeronest"):
+        rows = [c for c in analyze(cfg, cid).what_changed if c.category == "pricing"]
+        assert len(rows) == 1 and rows[0].date and "→" in rows[0].title
+
+
+def test_bigger_batches_is_a_weak_point_not_a_live_class_limitation(cfg):
+    a = analyze(cfg, "ganitron")
+    assert not any(f.feature == "Live classes" for f in a.feature_shifts)
+    assert not any(f.change == "limited" for f in a.feature_shifts)
+    assert any(c.title == "Bigger batches" for c in a.what_changed)
+    assert any(w.point.startswith("Bigger batches") and "40 to 60" in w.evidence for w in a.weak_points)
+
+
+def test_biggest_move_prefers_a_price_move_over_a_new_addon(cfg):
+    assert agent.biggest_move(analyze(cfg, "sumzilla")).startswith("Sumzilla Plus: ₹349 → ₹249")
+
+
+def test_project_name_everywhere():
+    assert agent.APP_NAME == "battlecard-ai" and agent.REPO_URL.endswith("/battlecard-ai")
+    assert agent.USER_AGENT.startswith("battlecard-ai/")
+    assert "github.com/Creator-hub24/battlecard-ai" in (ROOT / "output/sample_battlecard.md").read_text("utf-8")
