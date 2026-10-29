@@ -2,15 +2,15 @@
 
 > ⚠️ **MOCK DATA.** The competitors in this battlecard are **fictional companies** with invented prices and changelogs, created for a portfolio demo. The Edumaths360 profile is illustrative.
 
-**Generated:** 2026-10-29 23:21 IST · **Analysis mode:** offline heuristic analyzer (no LLM) · **Change window:** 01 Jul 2026 to 29 Oct 2026 · **Agent:** v1.0.0
+**Generated:** 2026-10-29 23:40 IST · **Analysis mode:** offline heuristic analyzer (no LLM) · **Change window:** 01 Jul 2026 to 29 Oct 2026 · **Agent:** battlecard-ai v1.1.0
 
 ## 🧭 Executive TL;DR
 
 | Competitor | Threat | Positioning | Biggest recent move | How we win |
 |---|---|---|---|---|
-| **Sumzilla** | 🔴 High | Budget player (₹167-₹249/month); leads with offline / low-data access, gamified streaks and leaderboards, step-by-step worked solutions. | Sumzilla Plus: ₹349 → ₹249/month | Board-pattern mocks with marking-scheme feedback |
-| **Ganitron Live** | 🟠 Medium | Premium player (₹1,500-₹4,999/month); leads with live classes, Hindi / bilingual content, doubt solving. | Live Batch Annual: ₹14,999 → ₹17,999/year | Board-pattern mocks with marking-scheme feedback |
-| **NumeroNest AI** | 🟠 Medium | Similar-priced player (₹400-₹599/month); leads with gamified streaks and leaderboards, adaptive practice (difficulty adjusts per student), step-by-step worked solutions. | Nest Pro: ₹499 → ₹599/month | Board-pattern mocks with marking-scheme feedback |
+| **Sumzilla** | 🔴 High | Budget player (₹167-₹249/month); leads with offline / low-data access, gamified streaks and leaderboards, step-by-step worked solutions. | Sumzilla Plus: ₹349 → ₹249/month (2026-10-05) | Board-pattern mocks with marking-scheme feedback |
+| **Ganitron Live** | 🟠 Medium | Premium player (₹1,500-₹4,999/month); leads with live classes, Hindi / bilingual content, doubt solving. | Live Batch Annual: ₹14,999 → ₹17,999/year (2026-10-01) | Board-pattern mocks with marking-scheme feedback |
+| **NumeroNest AI** | 🟠 Medium | Similar-priced player (₹400-₹599/month); leads with gamified streaks and leaderboards, adaptive practice (difficulty adjusts per student), step-by-step worked solutions. | Nest Pro: ₹499 → ₹599/month (2026-09-28) | Board-pattern mocks with marking-scheme feedback |
 
 ## 1. Sumzilla
 
@@ -22,10 +22,9 @@
 
 | Date | Type | Change | Evidence |
 |---|---|---|---|
-| page diff | 💰 Pricing | Sumzilla Plus: ₹349 → ₹249/month | Pricing page diff vs previous snapshot (sample_competitors/sumzilla/pricing.html) |
-| page diff | 💰 Pricing | Sumzilla Plus Annual: ₹2,499 → ₹1,999/year | Pricing page diff vs previous snapshot (sample_competitors/sumzilla/pricing.html) |
 | page diff | 💰 Pricing | New plan: AI Doubt Bot add-on (beta) at ₹99/month | Pricing page diff vs previous snapshot (sample_competitors/sumzilla/pricing.html) |
-| 2026-10-05 | 💰 Pricing | Plus is now ₹249/month | We cut the price of Sumzilla Plus from ₹349 to ₹249 per month and Plus Annual from ₹2,499 to ₹1,999 per year. |
+| 2026-10-05 | 💰 Pricing | Sumzilla Plus: ₹349 → ₹249/month | We cut the price of Sumzilla Plus from ₹349 to ₹249 per month and Plus Annual from ₹2,499 to ₹1,999 per year. Confirmed by the pricing page diff vs the previous snapshot. |
+| 2026-10-05 | 💰 Pricing | Sumzilla Plus Annual: ₹2,499 → ₹1,999/year | We cut the price of Sumzilla Plus from ₹349 to ₹249 per month and Plus Annual from ₹2,499 to ₹1,999 per year. Confirmed by the pricing page diff vs the previous snapshot. |
 | 2026-09-14 | 🚀 Launch | Introducing the AI Doubt Bot (beta) | Plus members can now add the AI Doubt Bot for ₹99/month. |
 | 2026-08-20 | 🗑️ Removed | Offline downloads move to Plus | Offline video downloads have been removed from the Free plan. |
 | 2026-07-22 | 🚀 Launch | School leaderboards | Students can now compete on school-level and city-level leaderboards. |
@@ -110,8 +109,7 @@
 
 | Date | Type | Change | Evidence |
 |---|---|---|---|
-| page diff | 💰 Pricing | Live Batch Annual: ₹14,999 → ₹17,999/year | Pricing page diff vs previous snapshot (sample_competitors/ganitron/pricing.html) |
-| 2026-10-01 | 💰 Pricing | New academic-year pricing | Live Batch Annual is now ₹17,999 per year (earlier ₹14,999). |
+| 2026-10-01 | 💰 Pricing | Live Batch Annual: ₹14,999 → ₹17,999/year | Live Batch Annual is now ₹17,999 per year (earlier ₹14,999). Confirmed by the pricing page diff vs the previous snapshot. |
 | 2026-09-03 | 🔧 Change | Bigger batches | To meet demand, live batch size has increased from 40 to 60 students per class. |
 | 2026-08-12 | 🚀 Launch | Ganitron Parent App | Launched the Parent App with attendance tracking and class recordings. |
 | 2026-07-15 | 🚀 Launch | Hinglish batches | New Hinglish batches for Class 9. |
@@ -146,7 +144,7 @@
 | Covers the full Class 6-10 syllabus | ✅ Yes | 🟡 Partial | Interactive live classes for Classes 8 to 10 only. |
 | Gamified streaks and leaderboards | 🟡 Partial | ➖ Not mentioned | - |
 
-**Feature shifts:** limited *Live classes*; added *Parent progress reports*; added *Hindi / bilingual content*.
+**Feature shifts:** added *Parent progress reports*; added *Hindi / bilingual content*.
 
 ### 🎯 Weak points to exploit
 
@@ -188,16 +186,15 @@
 
 **Threat:** 🟠 Medium · **Analyzed with:** offline heuristics
 
-> Similar-priced player (₹400-₹599/month); leads with gamified streaks and leaderboards, adaptive practice (difficulty adjusts per student), step-by-step worked solutions. Raised prices on 1 plan(s), e.g. Nest Pro ₹499 → ₹599. Recently launched: Adaptive practice (difficulty adjusts per student).
+> Similar-priced player (₹400-₹599/month); leads with gamified streaks and leaderboards, adaptive practice (difficulty adjusts per student), step-by-step worked solutions. Raised prices on 1 plan(s), e.g. Nest Pro ₹499 → ₹599. Recently launched: Adaptive practice (difficulty adjusts per student), Doubt solving.
 
 ### 🔔 What changed
 
 | Date | Type | Change | Evidence |
 |---|---|---|---|
-| page diff | 💰 Pricing | Nest Pro: ₹499 → ₹599/month | Pricing page diff vs previous snapshot (sample_competitors/numeronest/pricing.html) |
 | 2026-10-20 | 🚀 Launch | Adaptive Practice is now generally available | Adaptive Practice adjusts difficulty after every answer. |
-| 2026-09-28 | 💰 Pricing | Pricing update | Nest Pro monthly is now ₹599/month (was ₹499). |
-| 2026-09-01 | 📝 Other | Photo doubts | Snap a photo of any textbook question and get a step-by-step answer. |
+| 2026-09-28 | 💰 Pricing | Nest Pro: ₹499 → ₹599/month | Nest Pro monthly is now ₹599/month (was ₹499). Confirmed by the pricing page diff vs the previous snapshot. |
+| 2026-09-01 | 🚀 Launch | Photo doubts | Snap a photo of any textbook question and get a step-by-step answer. |
 | 2026-08-05 | ⚠️ Issue | Known issue: geometry constructions | Known issue: AI answers for geometry construction questions may be incorrect. |
 | 2026-07-18 | 🗑️ Removed | Printable worksheets deprecated | Printable worksheets have been deprecated and will be removed on 30 November 2026. |
 
@@ -231,7 +228,7 @@
 | Covers the full Class 6-10 syllabus | ✅ Yes | 🟡 Partial | Currently for Class 6-8 only. |
 | Gamified streaks and leaderboards | 🟡 Partial | ✅ Yes | XP streaks |
 
-**Feature shifts:** added *Adaptive practice (difficulty adjusts per student)*; removed *Printable worksheets deprecated*.
+**Feature shifts:** added *Adaptive practice (difficulty adjusts per student)*; added *Doubt solving*; deprecated *Printable worksheets*.
 
 ### 🎯 Weak points to exploit
 
@@ -272,12 +269,12 @@
 
 | Competitor | Source | Type | Retrieved | SHA-256 | Since last run |
 |---|---|---|---|---|---|
-| Sumzilla | `sample_competitors/sumzilla/pricing.html` | pricing | 2026-10-29 23:21 IST | `34a2ef44f479` | 🆕 first run |
-| Sumzilla | `sample_competitors/sumzilla/changelog.md` | changelog | 2026-10-29 23:21 IST | `4422915a9b0f` | 🆕 first run |
-| Ganitron Live | `sample_competitors/ganitron/pricing.html` | pricing | 2026-10-29 23:21 IST | `dc2308ae8c73` | 🆕 first run |
-| Ganitron Live | `sample_competitors/ganitron/changelog.html` | changelog | 2026-10-29 23:21 IST | `2fcfb2af6723` | 🆕 first run |
-| NumeroNest AI | `sample_competitors/numeronest/pricing.html` | pricing | 2026-10-29 23:21 IST | `e94008db8806` | 🆕 first run |
-| NumeroNest AI | `sample_competitors/numeronest/changelog.md` | changelog | 2026-10-29 23:21 IST | `b783bcfda5ff` | 🆕 first run |
+| Sumzilla | `sample_competitors/sumzilla/pricing.html` | pricing | 2026-10-29 23:40 IST | `34a2ef44f479` | 🆕 first run |
+| Sumzilla | `sample_competitors/sumzilla/changelog.md` | changelog | 2026-10-29 23:40 IST | `4422915a9b0f` | 🆕 first run |
+| Ganitron Live | `sample_competitors/ganitron/pricing.html` | pricing | 2026-10-29 23:40 IST | `dc2308ae8c73` | 🆕 first run |
+| Ganitron Live | `sample_competitors/ganitron/changelog.html` | changelog | 2026-10-29 23:40 IST | `2fcfb2af6723` | 🆕 first run |
+| NumeroNest AI | `sample_competitors/numeronest/pricing.html` | pricing | 2026-10-29 23:40 IST | `e94008db8806` | 🆕 first run |
+| NumeroNest AI | `sample_competitors/numeronest/changelog.md` | changelog | 2026-10-29 23:40 IST | `b783bcfda5ff` | 🆕 first run |
 
 ---
-*Generated by [ai-gtm-competitive-agent](https://github.com/Creator-hub24/ai-gtm-competitive-agent) (offline mode). Verify claims against the linked sources before sharing with customers.*
+*Generated by [battlecard-ai](https://github.com/Creator-hub24/battlecard-ai) (offline mode). Verify claims against the linked sources before sharing with customers.*
